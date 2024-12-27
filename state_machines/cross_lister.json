@@ -1,0 +1,41 @@
+{
+  "StartAt": "ValidateInput",
+  "States": {
+    "ValidateInput": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:region:account-id:function:ValidateInput",
+      "Next": "ListOnPlatforms"
+    },
+    "ListOnPlatforms": {
+      "Type": "Parallel",
+      "Branches": [
+        {
+          "StartAt": "ListOnEbay",
+          "States": {
+            "ListOnEbay": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:region:account-id:function:ListOnEbay",
+              "End": true
+            }
+          }
+        },
+        {
+          "StartAt": "ListOnPoshmark",
+          "States": {
+            "ListOnPoshmark": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:region:account-id:function:ListOnPoshmark",
+              "End": true
+            }
+          }
+        }
+      ],
+      "Next": "UpdateStatus"
+    },
+    "UpdateStatus": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:region:account-id:function:UpdateStatus",
+      "End": true
+    }
+  }
+}
